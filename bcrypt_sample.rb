@@ -15,38 +15,29 @@ require 'bcrypt'
 # puts my_password == "my password"     #=> true
 # puts my_password == "not my password" #=> false
 
-users = [
-  { username: "mike", password: "password1" },
-  { username: "popcorn", password: "password2" },
-  { username: "kendrick", password: "password3" },
-  { username: "west", password: "password4" },
-]
+module UserBcrypt
 
-def create_hash_digest(password)
-  BCrypt::Password.create(password)
-end
-
-def verify_hash_digest(password)
-  BCrypt::Password.new(password)
-end
-
-def create_secure_users(list_of_users)
-  list_of_users.each do |user_record|
-    user_record[:password] = create_hash_digest(user_record[:password])
+  def UserBcrypt.create_hash_digest(password)
+    BCrypt::Password.create(password)
   end
-  list_of_users
-end
 
-password_encoded_users = create_secure_users(users)
-# puts password_encoded_users
+  def UserBcrypt.verify_hash_digest(password)
+    BCrypt::Password.new(password)
+  end
 
-def authenticate_user(username, password, list_of_users)
-  list_of_users.each do |user_record|
-    if user_record[:username] == username && verify_hash_digest(user_record[:password]) == password
-      return user_record
+  def UserBcrypt.create_secure_users(list_of_users)
+    list_of_users.each do |user_record|
+      user_record[:password] = create_hash_digest(user_record[:password])
     end
+    list_of_users
   end
-  "credentials were not correct"
-end
 
-p authenticate_user("west", "password4", password_encoded_users)
+  def UserBcrypt.authenticate_user(username, password, list_of_users)
+    list_of_users.each do |user_record|
+      if user_record[:username] == username && verify_hash_digest(user_record[:password]) == password
+        return user_record
+      end
+    end
+    "credentials were not correct"
+  end
+end
