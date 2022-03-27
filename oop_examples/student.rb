@@ -1,4 +1,8 @@
+require_relative '../bcrypt_sample'
+
 class Student
+  include UserBcrypt
+
   attr_accessor :first_name, :last_name, :email, :password
   attr_reader :username
 
@@ -33,11 +37,7 @@ class Student
 end
 
 mike = Student.new("mike", "popcorn", "mikepopcorn", "mike@example.com", "passw0rd")
-mike.password = "updated_password"
+# mike.password = "updated_password"
 
-puts mike
-puts mike.first_name
-puts mike.last_name
-puts mike.email
-puts mike.username
-puts mike.password
+hashed_password = mike.create_hash_digest(mike.password)
+p hashed_password
